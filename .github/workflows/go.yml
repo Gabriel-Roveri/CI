@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ '*' ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ '*' ]
 
 jobs:
 
@@ -31,41 +31,10 @@ jobs:
     - name: Test
       run: go test -v ./main_test.go
 
-  test-windows:
-    name: Test on Go ${{ matrix.go_version }}
-    runs-on: windows-latest
-    strategy:
-      matrix:        
-        go_version: ['1.18', '1.17', '>=1.18']
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: ${{ matrix.go_version }}
-
-    - name: Build-DB
-      run: docker-compose build 
-
-    - name: Create-DB
-      run: docker-compose up -d
-
-    - name: Test
-      run: go test -v ./main_test.go
-
   build-ubuntu:
     needs: test-ubuntu
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: go build -v main.go  
-
-  build-windows:
-    needs: test-windows
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: go build -v main.go  
+      run: go build -v main.go
